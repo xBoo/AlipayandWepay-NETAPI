@@ -2,7 +2,7 @@
 
 namespace AW.Pay.Core
 {
-    public static class Config
+    public static class AlipayConfig
     {
         #region Alipay config
         public static string ALIPay_URL = ConfigurationManager.AppSettings["ALIPay_URL"];
@@ -23,7 +23,32 @@ namespace AW.Pay.Core
 
         public static string ALIPay_RSA_PUBLICKEY = ConfigurationManager.AppSettings["ALIPay_RSA_PUBLICKEY"];
         public static string ALIPay_RSA_PRIVATEKEY = ConfigurationManager.AppSettings["ALIPay_RSA_PRIVATEKEY"];
-        public static string ALIPay_RSA_ALI_PUBLICKEY = ConfigurationManager.AppSettings["ALIPay_RSA_ALI_PUBLICKEY"]; 
+        public static string ALIPay_RSA_ALI_PUBLICKEY = ConfigurationManager.AppSettings["ALIPay_RSA_ALI_PUBLICKEY"];
         #endregion
+    }
+
+    public static class WepayConfig
+    {
+        public static string WEPAY_CHARTSET = "utf-8";
+        public static string WEPAY_PAY_URL = ConfigurationManager.AppSettings["WEPAY_PAY_URL"];//统一下单URL
+
+        #region 微信开发者平台（APP支付）
+        public static string WEPAY_APP_APPID = ConfigurationManager.AppSettings["WEPAY_MP_APPID"];
+        public static string WEPAY_APP_MCH_ID = ConfigurationManager.AppSettings["WEPAY_MP_MCH_ID"];
+        public static string WEPAY_APP_NOTIFY_URL = ConfigurationManager.AppSettings["WEPAY_MP_NOTIFY_URL"];
+        public static string WEPAY_APP_URL = ConfigurationManager.AppSettings["WEPAY_MP_URL"];
+        public static string WEPAY_APP_KEY = ConfigurationManager.AppSettings["WEPAY_APP_KEY"];
+
+
+        #endregion
+
+        #region 微信公众平台（扫码、公众号支付）
+        public static string WEPAY_WEB_APPID = ConfigurationManager.AppSettings["WEPAY_MP_APPID"];
+        public static string WEPAY_WEB_MCH_ID = ConfigurationManager.AppSettings["WEPAY_MP_MCH_ID"];
+        public static string WEPAY_WEB_NOTIFY_URL = ConfigurationManager.AppSettings["WEPAY_MP_NOTIFY_URL"];
+        public static string WEPAY_WEB_URL = ConfigurationManager.AppSettings["WEPAY_MP_URL"];
+        public static string WEPAY_WEB_KEY = ConfigurationManager.AppSettings["WEPAY_WEB_KEY"];
+        #endregion
+
     }
 }

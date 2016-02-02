@@ -54,7 +54,7 @@ namespace AW.Pay.Core
                     result = true;
             }
             else
-                result = RSAFromPkcs8.verify(param, requestSign, Config.ALIPay_RSA_ALI_PUBLICKEY, "utf-8");
+                result = RSAFromPkcs8.verify(param, requestSign, AlipayConfig.ALIPay_RSA_ALI_PUBLICKEY, "utf-8");
 
             string responseText = GetResponseTxt(queryString["notify_id"]);
 
@@ -98,7 +98,7 @@ namespace AW.Pay.Core
         private string BuildForm(SortedDictionary<string, string> dicParam)
         {
             StringBuilder sbHtml = new StringBuilder();
-            sbHtml.Append("<form id='alipaysubmit' name='alipaysubmit' action='" + Config.ALIPay_URL + "_input_charset=" + Config.CHARTSET + "' method='get'>");
+            sbHtml.Append("<form id='alipaysubmit' name='alipaysubmit' action='" + AlipayConfig.ALIPay_URL + "_input_charset=" + AlipayConfig.CHARTSET + "' method='get'>");
 
             foreach (KeyValuePair<string, string> temp in dicParam)
             {
@@ -115,15 +115,15 @@ namespace AW.Pay.Core
             SortedDictionary<string, string> dic = new SortedDictionary<string, string>();
             #region BASEPARAM
 
-            string service = aliPayType == EnumAliPayType.Website ? Config.ALIPay_WEB_SERVICE
-                            : aliPayType == EnumAliPayType.Wap ? Config.ALIPay_WAP_SERVICE
-                            : aliPayType == EnumAliPayType.Mobile ? Config.ALIPay_MOBILE_SERVICE
+            string service = aliPayType == EnumAliPayType.Website ? AlipayConfig.ALIPay_WEB_SERVICE
+                            : aliPayType == EnumAliPayType.Wap ? AlipayConfig.ALIPay_WAP_SERVICE
+                            : aliPayType == EnumAliPayType.Mobile ? AlipayConfig.ALIPay_MOBILE_SERVICE
                             : "";
 
             dic.Add("service", service);
-            dic.Add("partner", Config.ALI_PARTER);
-            dic.Add("_input_charset", Config.CHARTSET);
-            dic.Add("notify_url", Config.ALIPay_NotifyURL);
+            dic.Add("partner", AlipayConfig.ALI_PARTER);
+            dic.Add("_input_charset", AlipayConfig.CHARTSET);
+            dic.Add("notify_url", AlipayConfig.ALIPay_NotifyURL);
 
             //dic.Add("sign_type", SIGNTYPE); 
             #endregion
@@ -131,10 +131,10 @@ namespace AW.Pay.Core
             #region BIZPARAM
             dic.Add("out_trade_no", orderNo);
             dic.Add("subject", subject);
-            dic.Add("payment_type", Config.PAYMENT_TYPE);
+            dic.Add("payment_type", AlipayConfig.PAYMENT_TYPE);
             dic.Add("total_fee", totalAmt.ToString("F2"));
             //dic.Add("seller_email", ALI_SELLEREMAIL);
-            dic.Add("seller_id", Config.ALI_SELLERID);
+            dic.Add("seller_id", AlipayConfig.ALI_SELLERID);
             //dic.Add("anti_phishing_key", anti_phishing_key);//防钓鱼时间戳,如果已申请开通防钓鱼证，则此字段必填。
             //dic.Add("exter_invoke_ip", exter_invoke_ip);//客户端 IP ,如果商户申请后台开通防钓鱼 IP地址检查选项，此字段必填，校验用。 
             #endregion
@@ -166,25 +166,11 @@ namespace AW.Pay.Core
             string mysign = "";
 
             if (signType == EnumSignType.MD5)
-                mysign = MD5Sign(urlParam, Config.ALI_KEY, Config.CHARTSET);
+                mysign = MD5Helper.Sign(urlParam, AlipayConfig.ALI_KEY, AlipayConfig.CHARTSET);
             else if (signType == EnumSignType.RSA)
-                mysign = RSASign(urlParam, Config.ALIPay_RSA_PRIVATEKEY, Config.CHARTSET);
+                mysign = RSASign(urlParam, AlipayConfig.ALIPay_RSA_PRIVATEKEY, AlipayConfig.CHARTSET);
 
             return mysign;
-        }
-
-        private string MD5Sign(string prestr, string key, string _input_charset)
-        {
-            StringBuilder sb = new StringBuilder(32);
-            prestr = prestr + key;
-            MD5 md5 = new MD5CryptoServiceProvider();
-            byte[] t = md5.ComputeHash(Encoding.GetEncoding(_input_charset).GetBytes(prestr));
-            for (int i = 0; i < t.Length; i++)
-            {
-                sb.Append(t[i].ToString("x").PadLeft(2, '0'));
-            }
-
-            return sb.ToString();
         }
 
         private string RSASign(string prestr, string privateKey, string input_charset)
@@ -201,7 +187,7 @@ namespace AW.Pay.Core
 
         private string GetResponseTxt(string notify_id)
         {
-            string veryfy_url = Config.ALI_HTTPS_VERYFY_URL + "&partner=" + Config.ALI_PARTER + "&notify_id=" + notify_id;
+            string veryfy_url = AlipayConfig.ALI_HTTPS_VERYFY_URL + "&partner=" + AlipayConfig.ALI_PARTER + "&notify_id=" + notify_id;
             string response = HTTPHelper.Get(veryfy_url, 120000);
             return response;
         }
