@@ -32,6 +32,6 @@ namespace AW.Pay.Core.Interface
         /// <param name="request">HTTP请求</param>
         /// <param name="model">当验证成功后，获取主要返回参数</param>
         /// <returns>验证结果</returns>
-        bool VerifyNotify(HttpRequestBase request, out WepayReturnModel model);
+        bool VerifyNotify(HttpRequestBase request, out WePayReturnModel model);
     }
 }

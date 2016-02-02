@@ -21,7 +21,7 @@ namespace AW.Pay.Core.Interface
         /// <param name="request">HTTP请求</param>
         /// <param name="model">当验证成功后，获取主要返回参数</param>
         /// <returns>验证结果</returns>
-        bool VerifyReturnURL(HttpRequestBase request, out AlipayReturnModel model);
+        bool VerifyReturnURL(HttpRequestBase request, out AliPayReturnModel model);
 
         /// <summary>
         /// 验证支付宝异步通知，并获取相关返回参数
@@ -29,6 +29,6 @@ namespace AW.Pay.Core.Interface
         /// <param name="request">HTTP请求</param>
         /// <param name="model">当验证成功后，获取主要返回参数</param>
         /// <returns>验证结果</returns>
-        bool VerfyNotify(HttpRequestBase request, out AlipayReturnModel model);
+        bool VerfyNotify(HttpRequestBase request, out AliPayReturnModel model);
     }
 }

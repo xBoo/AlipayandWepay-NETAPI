@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AW.Pay.Core.Model
 {
-    public class AlipayReturnModel
+    public class AliPayReturnModel
     {
         /// <summary>
         /// 商户订单号

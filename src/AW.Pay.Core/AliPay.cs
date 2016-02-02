@@ -18,13 +18,13 @@ namespace AW.Pay.Core
             return this.BuildAliPay(orderNo, subject, payAmount, tradeType);
         }
 
-        public bool VerifyReturnURL(HttpRequestBase request, out AlipayReturnModel model)
+        public bool VerifyReturnURL(HttpRequestBase request, out AliPayReturnModel model)
         {
             var requestVal = request.QueryString;
             return Verify(request, requestVal, out model);
         }
 
-        public bool VerfyNotify(HttpRequestBase request, out AlipayReturnModel model)
+        public bool VerfyNotify(HttpRequestBase request, out AliPayReturnModel model)
         {
             var requestVal = request.Form;
             return Verify(request, requestVal, out model);
@@ -32,7 +32,7 @@ namespace AW.Pay.Core
 
         #region private method
 
-        private bool Verify(HttpRequestBase request, NameValueCollection requestVal, out AlipayReturnModel model)
+        private bool Verify(HttpRequestBase request, NameValueCollection requestVal, out AliPayReturnModel model)
         {
             bool result = false;
             SortedDictionary<string, string> sortedDic = new SortedDictionary<string, string>();
@@ -64,7 +64,7 @@ namespace AW.Pay.Core
             bool resultVal = result && responseText == "true";
             if (resultVal)
             {
-                model = new AlipayReturnModel()
+                model = new AliPayReturnModel()
                 {
                     OutTradeNo = request.Form["out_trade_no"],
                     TradeNo = request.Form["trade_no"],

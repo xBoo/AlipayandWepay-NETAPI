@@ -56,8 +56,8 @@
     <Compile Include="Enum\EnumWePayTradeType.cs" />
     <Compile Include="Interface\IAlipay.cs" />
     <Compile Include="Interface\IWePay.cs" />
-    <Compile Include="Model\AlipayReturnModel.cs" />
-    <Compile Include="Model\WepayReturnModel.cs" />
+    <Compile Include="Model\AliPayReturnModel.cs" />
+    <Compile Include="Model\WePayReturnModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WePay.cs" />
   </ItemGroup>

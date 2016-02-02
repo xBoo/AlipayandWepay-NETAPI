@@ -20,10 +20,10 @@ namespace AW.Pay.Core
             return this.UnifiedOrder(orderNo, productName, totalFee, customerIP, tradeType);
         }
 
-        public bool VerifyNotify(HttpRequestBase request, out WepayReturnModel model)
+        public bool VerifyNotify(HttpRequestBase request, out WePayReturnModel model)
         {
             bool verifyResult = false;
-            model = new WepayReturnModel();
+            model = new WePayReturnModel();
 
             string requestXml = GetRequestXmlData(request);
             var dic = FromXml(requestXml);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AW.Pay.Core.Model
 {
-    public class WepayReturnModel
+    public class WePayReturnModel
     {
         /// <summary>
         /// 商户订单号
