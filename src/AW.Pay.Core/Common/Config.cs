@@ -31,6 +31,7 @@ namespace AW.Pay.Core
     {
         public static string WEPAY_CHARTSET = "utf-8";
         public static string WEPAY_PAY_URL = ConfigurationManager.AppSettings["WEPAY_PAY_URL"];//统一下单URL
+        public static string WEPAY_ORDERQUERY_URL = ConfigurationManager.AppSettings["WEPAY_ORDERQUERY_URL"];
 
         #region 微信开发者平台（APP支付）
         public static string WEPAY_APP_APPID = ConfigurationManager.AppSettings["WEPAY_MP_APPID"];

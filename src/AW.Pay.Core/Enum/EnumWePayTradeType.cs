@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AW.Pay.Core.Enum
 {
-    public enum EnumTradeType
+    public enum EnumWePayTradeType
     {
         /// <summary>
         /// 公众号支付

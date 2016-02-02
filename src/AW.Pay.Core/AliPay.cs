@@ -7,40 +7,43 @@ using AW.Pay.Core.Interface;
 using System.Web;
 using System.Security.Cryptography;
 using AW.Pay.Core.Model;
+using System.Collections.Specialized;
 
 namespace AW.Pay.Core
 {
     public class AliPay : IAlipay
     {
-        public string BuildMobilePay(string orderNo, string subject, decimal payAmount, EnumSignType signType = EnumSignType.RSA)
+        public string BuildAliPay(string orderNo, string subject, decimal payAmount, EnumAliPayTradeType tradeType)
         {
-            return this.BuildRequest(orderNo, subject, payAmount, EnumAliPayType.Mobile, signType);
+            return this.BuildAliPay(orderNo, subject, payAmount, tradeType);
         }
 
-        public string BuildWapPay(string orderNo, string subject, decimal payAmount, EnumSignType signType = EnumSignType.MD5)
+        public bool VerifyReturnURL(HttpRequestBase request, out AlipayReturnModel model)
         {
-            return this.BuildRequest(orderNo, subject, payAmount, EnumAliPayType.Wap, signType);
+            var requestVal = request.QueryString;
+            return Verify(request, requestVal, out model);
         }
 
-        public string BuildWebPay(string orderNo, string subject, decimal payAmount, EnumSignType signType = EnumSignType.MD5)
+        public bool VerfyNotify(HttpRequestBase request, out AlipayReturnModel model)
         {
-            return this.BuildRequest(orderNo, subject, payAmount, EnumAliPayType.Website, signType);
+            var requestVal = request.Form;
+            return Verify(request, requestVal, out model);
         }
 
-        public bool VerifyReturnUrl(HttpRequestBase request, out AlipayReturnModel model)
-        {
-            var queryString = request.QueryString;
+        #region private method
 
+        private bool Verify(HttpRequestBase request, NameValueCollection requestVal, out AlipayReturnModel model)
+        {
             bool result = false;
             SortedDictionary<string, string> sortedDic = new SortedDictionary<string, string>();
-            foreach (var item in queryString.AllKeys)
+            foreach (var item in requestVal.AllKeys)
             {
                 if (item.ToLower() != "sign" && item.ToLower() != "sign_type" && !string.IsNullOrEmpty(item))
-                    sortedDic.Add(item, queryString[item]);
+                    sortedDic.Add(item, requestVal[item]);
             }
 
-            string requestSign = queryString["sign"];
-            string requestSigntype = queryString["sign_type"];
+            string requestSign = requestVal["sign"];
+            string requestSigntype = requestVal["sign_type"];
             string param = CreateURLParamString(sortedDic);
 
             EnumSignType signType = requestSigntype == "MD5" ? EnumSignType.MD5
@@ -56,7 +59,7 @@ namespace AW.Pay.Core
             else
                 result = RSAFromPkcs8.verify(param, requestSign, AlipayConfig.ALIPay_RSA_ALI_PUBLICKEY, "utf-8");
 
-            string responseText = GetResponseTxt(queryString["notify_id"]);
+            string responseText = GetResponseTxt(requestVal["notify_id"]);
 
             bool resultVal = result && responseText == "true";
             if (resultVal)
@@ -78,21 +81,27 @@ namespace AW.Pay.Core
             return resultVal;
         }
 
-        #region private method
-        private string BuildRequest(string orderNo, string subject, decimal totalAmt, EnumAliPayType aliPayType, EnumSignType signType = EnumSignType.MD5)
+        private string BuildRequest(string orderNo, string subject, decimal totalAmt, EnumAliPayTradeType aliPayType)
         {
+            var signType = aliPayType == EnumAliPayTradeType.APP ? EnumSignType.RSA : EnumSignType.MD5;
+
             SortedDictionary<string, string> dicParam = CreateParam(orderNo, subject, totalAmt, aliPayType);
             string urlParam = CreateURLParamString(dicParam, aliPayType);
-            string sign = HttpUtility.UrlEncode(BuildRequestsign(urlParam, signType), Encoding.UTF8);
-            dicParam.Add("sign", sign);
+
+            string sign = BuildRequestsign(urlParam, signType);
             dicParam.Add("sign_type", signType.ToString());
 
-            if (aliPayType == EnumAliPayType.Mobile)
+            if (aliPayType == EnumAliPayTradeType.APP)
             {
+                //APP支付URL字段须进行URL编码，具体出处参看官方文档
+                dicParam.Add("sign", HttpUtility.UrlEncode(sign, Encoding.UTF8));
                 return urlParam + "&sign=\"" + sign + "\"&sign_type=\"" + signType.ToString() + "\"";
             }
             else
+            {
+                dicParam.Add("sign", sign);
                 return BuildForm(dicParam);
+            }
         }
 
         private string BuildForm(SortedDictionary<string, string> dicParam)
@@ -110,14 +119,14 @@ namespace AW.Pay.Core
             return sbHtml.ToString();
         }
 
-        private SortedDictionary<string, string> CreateParam(string orderNo, string subject, decimal totalAmt, EnumAliPayType aliPayType)
+        private SortedDictionary<string, string> CreateParam(string orderNo, string subject, decimal totalAmt, EnumAliPayTradeType aliPayType)
         {
             SortedDictionary<string, string> dic = new SortedDictionary<string, string>();
             #region BASEPARAM
 
-            string service = aliPayType == EnumAliPayType.Website ? AlipayConfig.ALIPay_WEB_SERVICE
-                            : aliPayType == EnumAliPayType.Wap ? AlipayConfig.ALIPay_WAP_SERVICE
-                            : aliPayType == EnumAliPayType.Mobile ? AlipayConfig.ALIPay_MOBILE_SERVICE
+            string service = aliPayType == EnumAliPayTradeType.Website ? AlipayConfig.ALIPay_WEB_SERVICE
+                            : aliPayType == EnumAliPayTradeType.Wap ? AlipayConfig.ALIPay_WAP_SERVICE
+                            : aliPayType == EnumAliPayTradeType.APP ? AlipayConfig.ALIPay_MOBILE_SERVICE
                             : "";
 
             dic.Add("service", service);
@@ -139,18 +148,18 @@ namespace AW.Pay.Core
             //dic.Add("exter_invoke_ip", exter_invoke_ip);//客户端 IP ,如果商户申请后台开通防钓鱼 IP地址检查选项，此字段必填，校验用。 
             #endregion
 
-            if (aliPayType == EnumAliPayType.Mobile)
+            if (aliPayType == EnumAliPayTradeType.APP)
                 dic.Add("body", subject + "购买");
 
             return dic;
         }
 
-        private string CreateURLParamString(SortedDictionary<string, string> dicArray, EnumAliPayType type = EnumAliPayType.Website)
+        private string CreateURLParamString(SortedDictionary<string, string> dicArray, EnumAliPayTradeType type = EnumAliPayTradeType.Website)
         {
             StringBuilder prestr = new StringBuilder();
             foreach (KeyValuePair<string, string> temp in dicArray.OrderBy(o => o.Key))
             {
-                if (type == EnumAliPayType.Mobile)
+                if (type == EnumAliPayTradeType.APP)
                     prestr.Append(temp.Key + "=\"" + temp.Value + "\"&");
                 else
                     prestr.Append(temp.Key + "=" + temp.Value + "&");
@@ -191,6 +200,8 @@ namespace AW.Pay.Core
             string response = HTTPHelper.Get(veryfy_url, 120000);
             return response;
         }
+
+
         #endregion
     }
 }

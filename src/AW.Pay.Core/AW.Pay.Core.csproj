@@ -51,12 +51,13 @@
     <Compile Include="Common\HTTPHelper.cs" />
     <Compile Include="Common\MD5Helper.cs" />
     <Compile Include="Common\RSAFromPkcs8.cs" />
-    <Compile Include="Enum\EnumAliPayType.cs" />
+    <Compile Include="Enum\EnumAliPayTradeType.cs" />
     <Compile Include="Enum\EnumSignType.cs" />
-    <Compile Include="Enum\EnumTradeType.cs" />
+    <Compile Include="Enum\EnumWePayTradeType.cs" />
     <Compile Include="Interface\IAlipay.cs" />
     <Compile Include="Interface\IWePay.cs" />
     <Compile Include="Model\AlipayReturnModel.cs" />
+    <Compile Include="Model\WepayReturnModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WePay.cs" />
   </ItemGroup>

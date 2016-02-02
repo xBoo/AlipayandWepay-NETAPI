@@ -1,9 +1,9 @@
 ﻿namespace AW.Pay.Core
 {
     /// <summary>
-    /// AliPay类型
+    /// AliPay交易类型
     /// </summary>
-    public enum EnumAliPayType
+    public enum EnumAliPayTradeType
     {
         /// <summary>
         /// 网站支付
@@ -14,8 +14,8 @@
         /// </summary>
         Wap,
         /// <summary>
-        /// 移动支付
+        /// APP支付
         /// </summary>
-        Mobile
+        APP
     }
 }
