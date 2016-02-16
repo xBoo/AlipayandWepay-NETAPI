@@ -42,4 +42,7 @@ Global
 		{3C998EE8-7F0B-4D26-A5B9-ABC15AD6298E} = {46D007D7-8FC1-48F4-BC00-F58FCD1B4FA8}
 		{B893532E-AE5A-4F99-A6AF-672C6918C2F9} = {8536529D-D461-4EDB-A4EF-1A9E497A3DDC}
 	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45
+	EndGlobalSection
 EndGlobal

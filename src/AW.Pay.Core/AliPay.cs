@@ -15,7 +15,7 @@ namespace AW.Pay.Core
     {
         public string BuildAliPay(string orderNo, string subject, decimal payAmount, EnumAliPayTradeType tradeType)
         {
-            return this.BuildAliPay(orderNo, subject, payAmount, tradeType);
+            return this.BuildRequest(orderNo, subject, payAmount, tradeType);
         }
 
         public bool VerifyReturnURL(HttpRequestBase request, out AliPayReturnModel model)
@@ -175,7 +175,10 @@ namespace AW.Pay.Core
             string mysign = "";
 
             if (signType == EnumSignType.MD5)
-                mysign = MD5Helper.Sign(urlParam, AlipayConfig.ALI_KEY, AlipayConfig.CHARTSET);
+            {
+                string preString = urlParam + AlipayConfig.ALI_KEY;
+                mysign = MD5Helper.Sign(preString, AlipayConfig.CHARTSET);
+            }
             else if (signType == EnumSignType.RSA)
                 mysign = RSASign(urlParam, AlipayConfig.ALIPay_RSA_PRIVATEKEY, AlipayConfig.CHARTSET);
 

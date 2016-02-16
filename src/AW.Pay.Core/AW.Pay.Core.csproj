@@ -37,6 +37,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -47,11 +48,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AliPay.cs" />
+    <Compile Include="Common\BizResult.cs" />
     <Compile Include="Common\Config.cs" />
     <Compile Include="Common\HTTPHelper.cs" />
     <Compile Include="Common\MD5Helper.cs" />
     <Compile Include="Common\RSAFromPkcs8.cs" />
     <Compile Include="Enum\EnumAliPayTradeType.cs" />
+    <Compile Include="Enum\EnumBizCode.cs" />
     <Compile Include="Enum\EnumSignType.cs" />
     <Compile Include="Enum\EnumWePayTradeType.cs" />
     <Compile Include="Interface\IAlipay.cs" />

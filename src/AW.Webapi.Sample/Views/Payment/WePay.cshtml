@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewBag.Title = "WePayAsync";
+}
+
+<h2>WePayAsync</h2>
+<input type="hidden" id="hd_url" value="@ViewBag.PayUrl">
+<input type="hidden" value="@ViewBag.OrderId" id="hd_order_id" />
+<div class="weixin-img">
+</div>
+@section scripts{
+    <script src="~/Scripts/jquery.qrcode.min.js"></script>
+    <script>
+        var weiPay = $('#hd_url').val();
+        $('.weixin-img').qrcode({
+            render: "canvas", //table方式
+            text: weiPay //任意内容
+        });
+    </script>
+}
+

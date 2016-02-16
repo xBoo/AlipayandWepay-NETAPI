@@ -71,9 +71,6 @@ namespace AW.Pay.Core
             return verifyResult;
         }
 
-
-
-
         #region private method
         /// <summary>
         /// 统一下单
@@ -103,7 +100,7 @@ namespace AW.Pay.Core
                 {
                     string codeUrl = "";
                     dic.TryGetValue("code_url", out codeUrl);
-                    if (string.IsNullOrEmpty(codeUrl))
+                    if (!string.IsNullOrEmpty(codeUrl))
                         return codeUrl;
                     else
                         throw new Exception("未找到对应的二维码链接");
@@ -120,7 +117,9 @@ namespace AW.Pay.Core
             SortedDictionary<string, string> dicParam = CreateParam(orderNo, productName, totalFee, customerIP, tradeType);
 
             string signString = CreateURLParamString(dicParam);
-            string sign = MD5Helper.Sign(signString, tradeType == EnumWePayTradeType.APP ? WepayConfig.WEPAY_APP_KEY : WepayConfig.WEPAY_WEB_KEY, WepayConfig.WEPAY_CHARTSET).ToUpper();
+            string key = tradeType == EnumWePayTradeType.APP ? WepayConfig.WEPAY_APP_KEY : WepayConfig.WEPAY_WEB_KEY;
+            string preString = signString + "&key=" + key;
+            string sign = MD5Helper.Sign(preString, WepayConfig.WEPAY_CHARTSET).ToUpper();
             dicParam.Add("sign", sign);
 
             return BuildForm(dicParam);
@@ -206,7 +205,9 @@ namespace AW.Pay.Core
         {
             var dicParam = CreateWapAndAppPayParam(prepayid);
             string signString = CreateURLParamString(dicParam);
-            string sign = MD5Helper.Sign(signString, WepayConfig.WEPAY_APP_KEY, WepayConfig.WEPAY_CHARTSET).ToUpper();
+            string preString = signString + "&key=" + WepayConfig.WEPAY_APP_KEY;
+
+            string sign = MD5Helper.Sign(preString, WepayConfig.WEPAY_CHARTSET).ToUpper();
             dicParam.Add("sign", sign);
 
             return JsonConvert.SerializeObject(
@@ -262,14 +263,16 @@ namespace AW.Pay.Core
 
             string tradeType = GetValueFromDic<string>(dic, "trade_type");
             string preString = CreateURLParamString(dic);
-            string signString;
 
-            if (!string.IsNullOrEmpty(tradeType) && tradeType == EnumWePayTradeType.APP.ToString())//app支付
-                signString = MD5Helper.Sign(preString, WepayConfig.WEPAY_APP_KEY, WepayConfig.WEPAY_CHARTSET).ToUpper();
+            if (string.IsNullOrEmpty(tradeType))
+            {
+                string key = tradeType == EnumWePayTradeType.APP.ToString() ? WepayConfig.WEPAY_APP_KEY : WepayConfig.WEPAY_WEB_KEY;
+                string preSignString = preString + "&key=" + key;
+                string signString = MD5Helper.Sign(preSignString, WepayConfig.WEPAY_CHARTSET).ToUpper();
+                return signString == sign;
+            }
             else
-                signString = MD5Helper.Sign(preString, WepayConfig.WEPAY_WEB_KEY, WepayConfig.WEPAY_CHARTSET).ToUpper();
-
-            return signString == sign;
+                return false;
         }
 
         private static string BuildReturnXml(string code, string returnMsg)
@@ -284,7 +287,11 @@ namespace AW.Pay.Core
 
             SortedDictionary<string, string> dicParam = CreateQueryParam(transactionId, isApp);
             string signString = CreateURLParamString(dicParam);
-            string sign = MD5Helper.Sign(signString, isApp ? WepayConfig.WEPAY_APP_KEY : WepayConfig.WEPAY_WEB_KEY, "utf-8").ToUpper();
+
+            string key = isApp ? WepayConfig.WEPAY_APP_KEY : WepayConfig.WEPAY_WEB_KEY;
+            string preString = signString + "&key=" + key;
+
+            string sign = MD5Helper.Sign(preString, "utf-8").ToUpper();
             dicParam.Add("sign", sign);
 
             return BuildForm(dicParam);

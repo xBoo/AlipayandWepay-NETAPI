@@ -1,6 +1,10 @@
 @using System.Web.Http
 @using AW.Webapi.Sample.Areas.HelpPage.Models
 @model HelpPageApiModel
+@section Scripts {
+    @Html.DisplayForModel("TestClientDialogs")
+    @Html.DisplayForModel("TestClientReferences")
+}
 
 @{
     var description = Model.ApiDescription;

@@ -44,10 +44,10 @@ namespace AW.Pay.Core
         #endregion
 
         #region 微信公众平台（扫码、公众号支付）
-        public static string WEPAY_WEB_APPID = ConfigurationManager.AppSettings["WEPAY_MP_APPID"];
-        public static string WEPAY_WEB_MCH_ID = ConfigurationManager.AppSettings["WEPAY_MP_MCH_ID"];
-        public static string WEPAY_WEB_NOTIFY_URL = ConfigurationManager.AppSettings["WEPAY_MP_NOTIFY_URL"];
-        public static string WEPAY_WEB_URL = ConfigurationManager.AppSettings["WEPAY_MP_URL"];
+        public static string WEPAY_WEB_APPID = ConfigurationManager.AppSettings["WEPAY_WEB_APPID"];
+        public static string WEPAY_WEB_MCH_ID = ConfigurationManager.AppSettings["WEPAY_WEB_MCH_ID"];
+        public static string WEPAY_WEB_NOTIFY_URL = ConfigurationManager.AppSettings["WEPAY_WEB_NOTIFY_URL"];
+        public static string WEPAY_WEB_URL = ConfigurationManager.AppSettings["WEPAY_WEB_URL"];
         public static string WEPAY_WEB_KEY = ConfigurationManager.AppSettings["WEPAY_WEB_KEY"];
         #endregion
 
