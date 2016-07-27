@@ -94,7 +94,7 @@ namespace AW.Pay.Core
             if (aliPayType == EnumAliPayTradeType.APP)
             {
                 //APP支付URL字段须进行URL编码，具体出处参看官方文档
-                dicParam.Add("sign", HttpUtility.UrlEncode(sign, Encoding.UTF8));
+                sign=HttpUtility.UrlEncode(sign, Encoding.UTF8);
                 return urlParam + "&sign=\"" + sign + "\"&sign_type=\"" + signType.ToString() + "\"";
             }
             else
